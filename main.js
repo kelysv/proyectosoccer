@@ -1,22 +1,40 @@
-
 enchant();
+
 window.onload = function() {
+    game = new Core(2000, 1000);
+    game.preload('arbitro3.png', 'jugador44.png','jugador7.png','like.png','arquero.png','arquero222.png');
     
-    game = new Game(2800, 1800);
-    game.preload('jugador4.png','cancha.png','jugador44.png','jugador1.png');
     game.onload = function() {
 
-        background = new Sprite(1300,866); 
-        background.x =800;
-        background.y =500;
-        background.scaleX=2; 
-        background.scaleY=2;   
-        background.image = game.assets['cancha.png'] 
-        
-        bear = new Bear(500, 500); 
+    background=new Sprite(1796,1002);
+    background.x=95;
+    background.y=10;
+    //background.scaleX=2; 
+    // background.scaleY=2;
+    background.image=game.assets['like.png']
 
-        for (i = 0; i < 5; i++) {
-            fruits = new Azul(40); 
+     bear = new Bear(700,600);
+      game.fps = 30; //inicializa mi jugador
+
+      arquero = new Arquero();
+        // select sprite frame
+       arquero.tl.moveBy(0,150, 90)   // move right
+            .scaleTo(1, 1, 10)      // turn left
+            .moveBy(0, -150, 90)     // move left
+            .scaleTo(1, 1, 10)       // turn right
+            .loop();
+
+        arquero2 = new Arquero2();
+        // select sprite frame
+       arquero2.tl.moveBy(0,100, 90)   // move right
+            .scaleTo(-1, 1, 10)      // turn left
+            .moveBy(0, -100, 90)     // move left
+            .scaleTo(-1, 1, 10)       // turn right
+            .loop() 
+
+      
+        for (i = 0; i <5; i++) {
+            fruits = new Rojo(40); 
             }
 
         for (i = 0; i <4; i++) {
@@ -26,7 +44,7 @@ window.onload = function() {
         score = 0; 
         game.rootScene.addEventListener('touchend', function(event) { 
 
-            if(300 <event.x && event.x<2600){
+            if(215<event.x && event.x<1740){
                 bear.tx = event.x; 
                 if (event.x<bear.x) {
                     bear.scaleX=-1;
@@ -36,18 +54,21 @@ window.onload = function() {
             else{
                 bear.tx = bear.tx;    
             }
-            if (true) {}
-            bear.ty = event.y; 
-        });
-    }
 
-  Bear = Class.create(Sprite,
+            if (145<event.y && event.y<825) {
+                bear.ty = event.y; 
+            }
+            
+        });
+ }
+
+ Bear = Class.create(Sprite,
    {
     initialize: function(x, y) { 
-        Sprite.call(this, 92, 141); 
-        this.image = game.assets['jugador44.png'];
-        this.x = 1000;
-        this.y = 1000;
+        Sprite.call(this,30, 50); 
+        this.image = game.assets['arbitro3.png'];
+        this.x =600;
+        this.y =500;
 
         this.tx = this.x; 
         this.ty = this.y; 
@@ -63,35 +84,15 @@ window.onload = function() {
     }
 });
 
-Azul = Class.create(Sprite, 
+ Barcelona = Class.create(Sprite, 
 {
     initialize: function(frame) { 
-        Sprite.call(this,92,141); 
-        this.image = game.assets['jugador4.png'];
-
-        this.scaleX=-1;
-        this.x = 1200+Math.random() * 1400; 
-        this.y = 50+Math.random() * 1500; 
-        this.frame = frame;
-        game.rootScene.addChild(this);
-    },
-    onenterframe: function() {
-        if (this.within(bear)) {
-            bear.x-=5;
-            score++;
-        }
-    }
-});
-
-Barcelona = Class.create(Sprite, 
-{
-    initialize: function(frame) { 
-        Sprite.call(this,92,141); 
-        this.image = game.assets['jugador44.png'];
+        Sprite.call(this,30,50); 
+        this.image = game.assets['arbitro3.png'];
 
         //this.scaleX=-1;
-        this.x =200+Math.random() * 1600; 
-        this.y =50+Math.random() * 1500; 
+        this.x =300+Math.random() * 1000; 
+        this.y =200+Math.random() * 600; 
         this.frame = frame;
         game.rootScene.addChild(this);
     },
@@ -103,25 +104,55 @@ Barcelona = Class.create(Sprite,
     }*/
 });
 
-Pelota = Class.create(Sprite, 
+Rojo = Class.create(Sprite, 
 {
     initialize: function(frame) { 
-        Sprite.call(this,92,141); 
-        this.image = game.assets['jugador44.png'];
+        Sprite.call(this,20,50); 
+        this.image = game.assets['jugador7.png'];
 
-        //this.scaleX=-1;
-        this.x = 800+Math.random() * 1600; 
-        this.y = 300+Math.random() * 866; 
+        this.scaleX=-1;
+        this.x = 700+Math.random() * 1100; 
+        this.y = 145+Math.random() * 650; 
         this.frame = frame;
         game.rootScene.addChild(this);
     },
     onenterframe: function() {
         if (this.within(bear)) {
-            game.rootScene.removeChild(this);
+            bear.x-=5;
             score++;
         }
     }
 });
 
-    game.start();
+Arquero= Class.create(Sprite, 
+{
+    initialize: function() { 
+        Sprite.call(this,35,43); 
+        this.image = game.assets['arquero.png'];
+        this.x =250; 
+        this.y =400 ;
+        this.frame = [1,1,2,2];
+        game.rootScene.addChild(this);
+    }
+    });
+
+Arquero2= Class.create(Sprite, 
+{
+    initialize: function() { 
+        Sprite.call(this,27,50); 
+        this.image = game.assets['arquero222.png'];
+        this.scaleX=-1;
+        this.x =1710; 
+        this.y =400 ;
+        this.frame = [1,1,2,2];
+        game.rootScene.addChild(this);
+    }
+    });
+
+
+
+   game.start();
 }
+
+
+ 
