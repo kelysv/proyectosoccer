@@ -1,8 +1,15 @@
 enchant();
 
+enchant.Sound.enabledInMobileSafari = true;
+
+if(location.protocol == 'file:'){
+    enchant.ENV.USE_WEBAUDIO = false;
+    console.log('1');
+}
+
 window.onload = function() {
     game = new Core(2000, 1000);
-    game.preload('arbitro3.png', 'jugador44.png','jugador7.png','like.png','arquero.png','arquero222.png');
+    game.preload('arbitro3.png', 'pelota3.png','jugador7.png','like.png','arquero.png','arquero222.png','gol.wav');
     
     game.onload = function() {
 
@@ -13,8 +20,10 @@ window.onload = function() {
     // background.scaleY=2;
     background.image=game.assets['like.png']
 
-     bear = new Bear(700,600);
+     bear = new Bear(0,0);
       game.fps = 30; //inicializa mi jugador
+
+      pelota=new Pelota();
 
       arquero = new Arquero();
         // select sprite frame
@@ -44,19 +53,39 @@ window.onload = function() {
         score = 0; 
         game.rootScene.addEventListener('touchend', function(event) { 
 
-            if(215<event.x && event.x<1740){
+            if(event.x>1600&&event.y>500&&event.y<700)
+            {
+                game.assets['gol.wav'].play();
+            }
+
+            if(215<event.x && event.x<1760){
                 bear.tx = event.x; 
                 if (event.x<bear.x) {
                     bear.scaleX=-1;
+                    if (bear.intersect(pelota)) {
+                        pelota.x-=7;
+                    }
                 }
-                else{ bear.scaleX=+1;}
+                else{ bear.scaleX=+1;
+                if (bear.intersect(pelota)) {
+                        pelota.x+=30;
+                    }}
             } 
             else{
                 bear.tx = bear.tx;    
             }
 
             if (145<event.y && event.y<825) {
-                bear.ty = event.y; 
+                bear.ty = event.y;
+                 if (event.y<bear.y) {
+                    if (bear.intersect(pelota)) {
+                        pelota.y-=7;
+                    }
+                }
+                else{ 
+                if (bear.intersect(pelota)) {
+                        pelota.y+=7;
+                    }} 
             }
             
         });
@@ -68,7 +97,7 @@ window.onload = function() {
         Sprite.call(this,30, 50); 
         this.image = game.assets['arbitro3.png'];
         this.x =600;
-        this.y =500;
+        this.y =700;
 
         this.tx = this.x; 
         this.ty = this.y; 
@@ -148,6 +177,19 @@ Arquero2= Class.create(Sprite,
         game.rootScene.addChild(this);
     }
     });
+
+Pelota= Class.create(Sprite, 
+{
+    initialize: function() { 
+        Sprite.call(this,13,13); 
+        this.image = game.assets['pelota3.png'];
+        this.x = 600+Math.random() * 700; 
+        this.y = 400+Math.random() * 100; 
+        game.rootScene.addChild(this);
+     },
+      
+    });
+
 
 
 
